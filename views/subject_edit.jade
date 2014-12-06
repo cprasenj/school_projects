@@ -1,0 +1,27 @@
+
+doctype html
+html
+ head
+  title Edit Subject
+  link(rel='stylesheet', href='/stylesheets/style.css')  
+ body
+  h1 Edit #{name}
+
+  form(action = "/updateSubject", method="POST")
+    table( border = "4")
+     tr
+      th Subject Id
+      th Name
+      th MaxScore
+      th Grade Id
+     tr
+      td
+       input(type="text", name="id", value="#{id}")
+      td
+       input(type="text", name="name", value="#{name}")
+      td
+       input(type="text", name="maxScore", value="#{maxScore}")
+      td 
+       input(type="text", name="grade_id", value="#{grade_id}")
+    br
+    input(type="submit", value="update")

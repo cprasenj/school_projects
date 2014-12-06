@@ -4,14 +4,16 @@ html
   title Subject Summary
   link(rel='stylesheet', href='/stylesheets/style.css')  
  body
-  h1 Subject Summary
-  table
-   tr 
-    th #{name}
-    th #{maxScore}
-    th
-     a(href="/grade/#{grade_id}") #{grade[0].name}
-  table
+  h1 Subject Summary 
+  div #{name} &nbsp;&nbsp;&nbsp;&nbsp; 
+   a(href = "/subject_edit/#{id}" ) EDIT
+  div maxscore: #{maxScore}
+  div grade: 
+   a(href="/grade/#{grade_id}") #{grade[0].name}
+  table(border = "4")
+   tr
+    th name
+    th score
    each st in student
     tr
      td

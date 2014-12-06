@@ -97,6 +97,20 @@ describe('school_records',function(){
 		});
 	});
 
+	describe('#getEditSubject',function(){
+		it('retrieves the summary of subject 1',function(done){
+			school_records.getEditSubject(1,function(err,subject){
+				assert.notOk(err);
+				assert.equal(subject.name,'English-1');
+				assert.deepEqual(subject.student, [ { id: 1, name: 'Abu', score: 75 },
+				   { id: 2, name: 'Babu' },
+				   { id: 3, name: 'Kabu' },
+				   { id: 4, name: 'Dabu' } ]);
+				done();
+			});
+		});
+	});
+
 	describe('#getEditGrade',function(){
 		it('retrieves the name and id of the grade 1',function(done){
 			school_records.getEditGrade(1,function(err,grade){
@@ -191,6 +205,19 @@ describe('school_records',function(){
 			school_records.getUpdateGrade(change, function(err){
 				school_records.getGradeSummary(2, function(err, changedGrade){
 					var changed = {id: changedGrade.id, name: changedGrade.name};
+					assert.deepEqual(change, changed);
+					done();
+				});
+			});
+		});
+	});
+
+	describe('#getUpdateSubject',function(){
+		it('updates the name, maxScore and grade_id of the subject 1',function(done){
+			var change = {id: 1, name: 'Automata', maxScore: 500, grade_id: 1};
+			school_records.getUpdateSubject(change, function(err){
+				school_records.getSubjectSummary(1, function(err, changedSubject){
+					var changed = {id: 1, name: changedSubject.name, maxScore: changedSubject.maxScore, grade_id: changedSubject.grade_id};
 					assert.deepEqual(change, changed);
 					done();
 				});

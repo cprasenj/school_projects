@@ -29,8 +29,8 @@ app.get('/grade_edit/:id',school_routes.get_edit_grade);
 app.post('/updateGrade',school_routes.get_update_grade);
 app.get('/student_edit/:id',school_routes.get_edit_student);
 app.post('/updateStudent',school_routes.get_update_student);
-
-
+app.get('/subject_edit/:id',school_routes.get_edit_subject);
+app.post('/updateSubject',school_routes.get_update_subject);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');

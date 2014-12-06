@@ -96,6 +96,15 @@ var _getUpdateStudent = function(student, db, onComplete){
 	});
 };
 
+var _getUpdateSubject = function(subject, db, onComplete){
+	var subjectUpdateQuery = "update subjects set name='"+subject.name+"', maxScore='"+subject.maxScore+
+						"', grade_id='"+subject.grade_id+"' where id="+subject.id;
+	db.run(subjectUpdateQuery, function (err) {
+		if(err) return err;
+		onComplete(null);
+	});
+};
+
 var _getSubjectSummary = function(id,db,onComplete){
 	var subject_query = "select name, grade_id, maxScore from subjects where id ="+id;
 	db.get(subject_query,function(err,subject){
@@ -109,7 +118,6 @@ var _getSubjectSummary = function(id,db,onComplete){
 					onComplete(null,subject);
 				});
 			};
-
 			student.forEach(function(st,index,array){
 				db.get('select score from scores where student_id ='+st.id+' and subject_id = '+ id,function(esc,score){
 					score && (st.score=score.score);
@@ -119,6 +127,11 @@ var _getSubjectSummary = function(id,db,onComplete){
 		});
 	});
 };
+
+var _getEditSubject = function (id, db, onComplete) {
+	_getSubjectSummary(id, db, onComplete);
+};
+
 
 var init = function(location){	
 	var operate = function(operation){
@@ -146,7 +159,9 @@ var init = function(location){
 		getEditGrade: operate(_getEditGrade),
 		getUpdateGrade: operate(_getUpdateGrade),
 		getEditStudent: operate(_getEditStudent),
-		getUpdateStudent: operate(_getUpdateStudent)
+		getUpdateStudent: operate(_getUpdateStudent),
+		getEditSubject: operate(_getEditSubject),
+		getUpdateSubject: operate(_getUpdateSubject)
 	};
 
 	return records;

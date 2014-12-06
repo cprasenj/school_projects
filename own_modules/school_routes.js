@@ -34,8 +34,11 @@ exports.get_subject_summary = function(req,res,next){
 	function(err,subject){
 		if(!subject) 
 			next();
-		else 
+		else {
+			subject.id = req.params.id;
+			console.log(subject);
 			res.render('subject',subject);
+		}
 	});
 };
 
@@ -65,8 +68,19 @@ exports.get_edit_student = function(req,res,next){
 			if(!student)
 				next();
 			else{
-				console.log('from routes',student);
 				res.render('student_edit',student);
+			}
+		});
+};
+exports.get_edit_subject = function(req,res,next){
+	school_records.getEditSubject(req.params.id,
+		function(err,subject){
+			if(!subject)
+				next();
+			else{
+				subject.id = req.params.id;
+				res.render('subject_edit',subject);
+				
 			}
 		});
 };
@@ -83,10 +97,30 @@ exports.get_update_grade = function (req, res, next) {
 		});
 };
 
+exports.get_update_subject = function (req, res, next) {
+	console.log(req.body);
+	school_records.getUpdateSubject(req.body,
+		function(err){
+			if(err)
+				next();
+			else{
+				res.redirect('/subject/'+req.body.id);
+				res.end();
+			}
+		});
+};
+
+
+var bodyParser = function (body) {
+	body.subjects = body.subject_id.map(function(id,i){
+		return {'id':id, score:body.subject_score[i] };
+	});
+};
+
 exports.get_update_student = function (req, res, next) {
 	var id = req.body.id;
-	var body = bodyParser(req.body);
-	school_records.getUpdateStudent(body,
+	bodyParser(req.body);
+	school_records.getUpdateStudent(req.body,
 		function(err){
 			if(err)
 				next();
@@ -95,15 +129,4 @@ exports.get_update_student = function (req, res, next) {
 				res.end();
 			}
 		});
-};
-
-var bodyParser = function (body) {
-	var request = body;
-	request.subjects = [];
-	var updatedBody = request.subject_id.map(function(id,i){
-		return {'id':id,score:request.subject_score[i]};
-	});
-
-	request.subjects.updatedBody;
-	return request;
 };
