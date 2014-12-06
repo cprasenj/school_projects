@@ -132,6 +132,11 @@ var _getEditSubject = function (id, db, onComplete) {
 	_getSubjectSummary(id, db, onComplete);
 };
 
+var _addStudent = function(student, db, onComplete) {
+	var insertStudent = "insert into students (name, grade_id) values ('" + student.name + "', " + student.grade_id + ");";
+	db.run(insertStudent, onComplete);
+};
+
 
 var init = function(location){	
 	var operate = function(operation){
@@ -161,7 +166,8 @@ var init = function(location){
 		getEditStudent: operate(_getEditStudent),
 		getUpdateStudent: operate(_getUpdateStudent),
 		getEditSubject: operate(_getEditSubject),
-		getUpdateSubject: operate(_getUpdateSubject)
+		getUpdateSubject: operate(_getUpdateSubject),
+		addStudent: operate(_addStudent)
 	};
 
 	return records;

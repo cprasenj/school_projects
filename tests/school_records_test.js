@@ -224,4 +224,20 @@ describe('school_records',function(){
 			});
 		});
 	});
+
+	describe('#addStudent',function(){
+		it('add a new student into grade 1',function(done){
+			var student = {grade_id: 1, name: 'Gautam'};
+			school_records.addStudent(student, function(err){
+				assert.notOk(err);	
+				school_records.getStudentsByGrade(function(err, grades) {
+					var studentsInGradeOne = grades[0].students.length;
+					var studentsInGradeTwo = grades[1].students.length;
+					student.id = studentsInGradeOne + studentsInGradeTwo;
+					assert.deepEqual(student, grades[0].students[studentsInGradeOne - 1]);
+					done();
+				});
+			});
+		});
+	});
 });

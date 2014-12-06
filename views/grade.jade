@@ -8,7 +8,9 @@ html
   p
    div
     div Name: #{name} &nbsp;&nbsp;&nbsp;&nbsp;
-     a(href="/grade_edit/#{id}") EDIT 
+     a(href="/grade_edit/#{id}") EDIT GRADE
+     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     a(href="/grade_add/#{id}") ADD STUDENT 
     div Students:
     ul
      each student in students

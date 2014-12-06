@@ -1,0 +1,21 @@
+doctype html
+html
+ head
+  title Add Student
+  link(rel='stylesheet', href='/stylesheets/style.css')  
+ body
+
+  form(action = "/addStudent", method="POST")
+   h3 Student Details
+   div
+    table(border="2", width = "200px")
+     tr
+      th Name
+      th Grade Id
+     tr
+      td
+       input(type="text", name="name")
+      td
+       input(type="text", name="grade_id", value = "#{grade_id}")
+   br
+   input(type="submit", value="Add")

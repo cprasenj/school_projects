@@ -130,3 +130,19 @@ exports.get_update_student = function (req, res, next) {
 			}
 		});
 };
+
+exports.get_add_student = function (req, res, next) {
+	res.render('grade_add', {grade_id: req.params.id})
+};
+
+exports.add_student = function(req, res, next) {
+	school_records.addStudent(req.body,
+		function(err){
+			if(err)
+				next();
+			else{
+				res.redirect('/grade/'+req.body.grade_id);
+				res.end();
+			}
+		});
+};
