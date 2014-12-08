@@ -4,9 +4,10 @@ html
   title Edit Student
   link(rel='stylesheet', href='/stylesheets/style.css')  
  body
+  a(href="/") Home
   h1 Edit #{name}
 
-  form(action = "/updateStudent", method="POST")
+  form(action = "/updateStudent/#{id}", method="POST")
    h3 Student Details
    div
     table(border="2", width = "200px")
@@ -17,7 +18,7 @@ html
       th Grade name
      tr
       td
-       input(type="text", name="id", value="#{id}")
+       input(type="text", name="id", value="#{id}", disabled)
       td
        input(type="text", name="name", value="#{name}")
       td

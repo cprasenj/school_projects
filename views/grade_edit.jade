@@ -4,9 +4,9 @@ html
   title Edit Grade
   link(rel='stylesheet', href='/stylesheets/style.css')  
  body
+  a(href="/") Home
   h1 Edit #{name}
-
-  form(action = "/updateGrade", method="POST")
-   input(type="text", name="id", value="#{id}")
+  form(action = "/updateGrade/#{id}", method="POST")
+   input(type="text", name="id", value="#{id}", disabled)
    input(type="text", name="name", value="#{name}")
    input(type="submit", value="update")

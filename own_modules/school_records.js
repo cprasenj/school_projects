@@ -108,6 +108,7 @@ var _getUpdateSubject = function(subject, db, onComplete){
 var _getSubjectSummary = function(id,db,onComplete){
 	var subject_query = "select name, grade_id, maxScore from subjects where id ="+id;
 	db.get(subject_query,function(err,subject){
+		subject.id = id;
 		var student_query = "select id,name from students where grade_id="+subject.grade_id;
 		db.all(student_query,function(est,student){
 			subject.student = student;

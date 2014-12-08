@@ -4,18 +4,18 @@ html
   title Add Student
   link(rel='stylesheet', href='/stylesheets/style.css')  
  body
-
-  form(action = "/addStudent", method="POST")
+  a(href="/") Home
+  form(action = "/addStudent/#{grade_id}", method="POST")
    h3 Student Details
    div
     table(border="2", width = "200px")
      tr
-      th Name
       th Grade Id
+      th Name
      tr
       td
-       input(type="text", name="name")
+       input(type="text", name="grade_id", value = "#{grade_id}", disabled)
       td
-       input(type="text", name="grade_id", value = "#{grade_id}")
+       input(type="text", name="name")
    br
    input(type="submit", value="Add")

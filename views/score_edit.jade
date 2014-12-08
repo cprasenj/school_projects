@@ -4,11 +4,12 @@ html
   title Score Edit
   link(rel='stylesheet', href='/stylesheets/style.css')  
  body
-  div #{name} &nbsp;&nbsp;&nbsp;&nbsp; 
-  div maxscore: #{maxScore}
-  div grade: 
+  a(href="/") Home
+  div #{subject.name} &nbsp;&nbsp;&nbsp;&nbsp; 
+  div Maxscore: #{subject.maxScore}
+  div Grade: 
    a(href="/grade/#{grade.id}") #{grade.name}
-  form(action = "/updateScore", method="POST")
+  form(action = "/updateScore/#{student.id}/#{subject.id}", method="POST")
    table(border = "4")
     tr
      th Student Id
@@ -17,11 +18,12 @@ html
      th Subject Score
     tr
      td
-      input(type="text", name="student_id", value="#{student.id}")
+      input(type="text", name="student_id", value="#{student.id}", disabled)
      td
       input(type="text", name="student_name", value="#{student.name}")
      td
-      input(type="text", name="subject_id", value="#{subject.id}")
+      input(type="text", name="subject_id", value="#{subject.id}", disabled)
      td
       input(type="text", name="score", value="#{score}")
+   br
    input(type="submit", value="save changes")

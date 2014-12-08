@@ -19,29 +19,26 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/grades',school_routes.get_grades);
-app.get('/students',school_routes.get_students);
-app.get('/subjects',school_routes.get_subjects);
-app.get('/student/:id',school_routes.get_student);
-app.get('/grade/:id',school_routes.get_grade_summary);
-app.get('/subject/:id',school_routes.get_subject_summary);
-app.get('/grade_edit/:id',school_routes.get_edit_grade);
+app.get('/grades',school_routes.getGrades);
+app.get('/students',school_routes.getStudents);
+app.get('/subjects',school_routes.getSubjects);
+app.get('/student/:id',school_routes.getStudentSummary);
+app.get('/grade/:id',school_routes.getGradeSummary);
+app.get('/subject/:id',school_routes.getSubjectSummary);
 
+app.get('/grade_edit/:id',school_routes.getEditGrade);
+app.post('/updateGrade/:id',school_routes.getUpdateGrade);
+app.get('/student_edit/:id',school_routes.getEditStudent);
+app.post('/updateStudent/:std_id',school_routes.getUpdateStudent);
+app.get('/subject_edit/:id',school_routes.getEditSubject);
+app.post('/updateSubject/:sub_id/:grade_id',school_routes.getUpdateSubject);
+app.get('/score_edit/:student_id/:subject_id',school_routes.getEditScore);
+app.post('/updateScore/:student_id/:subject_id',school_routes.updateScore);
 
-app.post('/updateGrade',school_routes.get_update_grade);
-app.get('/student_edit/:id',school_routes.get_edit_student);
-app.post('/updateStudent',school_routes.get_update_student);
-app.get('/subject_edit/:id',school_routes.get_edit_subject);
-app.post('/updateSubject',school_routes.get_update_subject);
-app.get('/score_edit/:student_id/:subject_id',school_routes.get_edit_score);
-app.post('/updateScore',school_routes.update_score);
-
-
-
-app.get('/grade_add/:id', school_routes.get_add_student);
-app.post('/addStudent', school_routes.add_student);
-app.get('/subject_add/:id', school_routes.get_add_subject);
-app.post('/addSubject', school_routes.add_subject);
+app.get('/grade_add/:grade_id', school_routes.getAddStudent);
+app.post('/addStudent/:grade_id', school_routes.addStudent);
+app.get('/subject_add/:grade_id', school_routes.getAddSubject);
+app.post('/addSubject/:grade_id', school_routes.addSubject);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

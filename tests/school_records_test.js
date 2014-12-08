@@ -88,6 +88,7 @@ describe('school_records',function(){
 			school_records.getSubjectSummary(1,function(err,subject){
 				assert.notOk(err);
 				assert.equal(subject.name,'English-1');
+				assert.equal(subject.id,1);
 				assert.deepEqual(subject.student, [ { id: 1, name: 'Abu', score: 75 },
 				   { id: 2, name: 'Babu' },
 				   { id: 3, name: 'Kabu' },
@@ -102,6 +103,7 @@ describe('school_records',function(){
 			school_records.getEditSubject(1,function(err,subject){
 				assert.notOk(err);
 				assert.equal(subject.name,'English-1');
+				assert.equal(subject.id,1);
 				assert.deepEqual(subject.student, [ { id: 1, name: 'Abu', score: 75 },
 				   { id: 2, name: 'Babu' },
 				   { id: 3, name: 'Kabu' },

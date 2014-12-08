@@ -1,137 +1,13 @@
 var school_records = require('./school_records').init('./data/school.db');
-exports.get_grades = function(req,res){
-	school_records.getGrades(function(err,grades){
-		res.render('grades',{grades:grades});
-	});
-};
 
-exports.get_students = function(req,res){
-	school_records.getStudentsByGrade(function(err,grades){
-		res.render('students',{grades:grades});
-	});
+var redirect = function(err,res,location,next){
+	if(err) next();
+	else res.redirect(location);
 };
-
-exports.get_subjects = function(req,res){
-	school_records.getSubjectsByGrade(function(err,grades){
-		res.render('subjects',{grades:grades});
-	});
+var render = function(err,res,location,content,next){
+	if(!content) next();
+	else res.render(location,content);
 };
-
-exports.get_student = function(req,res,next){
-	school_records.getStudentSummary(req.params.id,
-	function(err,student){
-		if(!student) 
-			next();
-		else 
-		{
-			res.render('student',student);
-		}
-	});
-};
-
-exports.get_subject_summary = function(req,res,next){
-	school_records.getSubjectSummary(req.params.id,
-	function(err,subject){
-		if(!subject) 
-			next();
-		else {
-			subject.id = req.params.id;
-			res.render('subject',subject);
-		}
-	});
-};
-
-exports.get_grade_summary = function(req,res,next){
-	school_records.getGradeSummary(req.params.id,
-		function(err,grade){
-			if(!grade)
-				next();
-			else
-				res.render('grade',grade);
-		});
-};
-
-exports.get_edit_grade = function(req,res,next){
-	school_records.getEditGrade(req.params.id,
-		function(err,grade){
-			if(!grade)
-				next();
-			else
-				res.render('grade_edit',grade);
-		});
-};
-
-exports.get_edit_student = function(req,res,next){
-	school_records.getEditStudent(req.params.id,
-		function(err,student){
-			if(!student)
-				next();
-			else{
-				res.render('student_edit',student);
-			}
-		});
-};
-exports.get_edit_subject = function(req,res,next){
-	school_records.getEditSubject(req.params.id,
-		function(err,subject){
-			if(!subject)
-				next();
-			else{
-				subject.id = req.params.id;
-				res.render('subject_edit',subject);
-				
-			}
-		});
-};
-
-exports.get_edit_score = function(req,res,next){
-	var ids = {student: req.params.student_id, subject: req.params.subject_id};
-	school_records.getEditScore(ids,
-		function(err,score){
-			if(!score)
-				next();
-			else{
-				res.render('score_edit',score);
-			}
-		});
-};
-
-exports.update_score = function (req, res, next) {
-	school_records.updateScore(req.body,
-		function(err){
-			if(err)
-				next();
-			else{
-				res.redirect('/subject/'+req.body.subject_id);
-				res.end();
-			}
-		});
-};
-
-exports.get_update_grade = function (req, res, next) {
-	school_records.getUpdateGrade(req.body,
-		function(err){
-			if(err)
-				next();
-			else{
-				res.redirect('/grade/'+req.body.id);
-				res.end();
-			}
-		});
-};
-
-exports.get_update_subject = function (req, res, next) {
-	school_records.getUpdateSubject(req.body,
-		function(err){
-			if(err)
-				next();
-			else{
-				res.redirect('/subject/'+req.body.id);
-				res.end();
-			}
-		});
-};
-
 
 var bodyParser = function (body) {
 	body.subjects = body.subject_id.map(function(id,i){
@@ -139,48 +15,115 @@ var bodyParser = function (body) {
 	});
 };
 
-exports.get_update_student = function (req, res, next) {
-	var id = req.body.id;
+exports.getGrades = function(req,res){
+	school_records.getGrades(function(err,grades){
+		res.render('grades',{grades:grades});
+	});
+};
+
+exports.getAddStudent = function (req, res, next) {
+	res.render('grade_add', {grade_id: req.params.grade_id});
+};
+
+exports.getAddSubject = function (req,res,next) {
+	res.render('subject_add', {grade_id: req.params.grade_id});
+};
+
+exports.getStudents = function(req,res){
+	school_records.getStudentsByGrade(function(err,grades){
+		res.render('students',{grades:grades});
+	});
+};
+
+exports.getSubjects = function(req,res){
+	school_records.getSubjectsByGrade(function(err,grades){
+		res.render('subjects',{grades:grades});
+	});
+};
+
+exports.getStudentSummary = function(req,res,next){
+	school_records.getStudentSummary(req.params.id, function(err,student){
+		render(err,res,'student',student,next);
+	});
+};
+
+exports.getSubjectSummary = function(req,res,next){
+	school_records.getSubjectSummary(req.params.id, function(err,subject){
+		render(err,res,'subject',subject,next);
+	});
+};
+
+exports.getGradeSummary = function(req,res,next){
+	school_records.getGradeSummary(req.params.id, function(err,grade){
+		render(err,res,'grade',grade,next);
+	});
+};
+
+exports.getEditGrade = function(req,res,next){
+	school_records.getEditGrade(req.params.id, function(err,grade){
+		render(err,res,'grade_edit',grade,next);
+	});
+};
+
+exports.getEditStudent = function(req,res,next){
+	school_records.getEditStudent(req.params.id, function(err,student){
+		render(err,res,'student_edit',student,next);
+	});
+};
+exports.getEditSubject = function(req,res,next){
+	school_records.getEditSubject(req.params.id, function(err,subject){
+		render(err,res,'subject_edit',subject,next);
+	});
+};
+
+exports.getEditScore = function(req,res,next){
+	var ids = {student: req.params.student_id, subject: req.params.subject_id};
+	school_records.getEditScore(ids, function(err,score){
+		render(err,res,'score_edit',score,next);
+	});
+};
+
+exports.updateScore = function (req, res, next) {
+	req.body.student_id = req.params.student_id;
+	req.body.subject_id = req.params.subject_id;
+	school_records.updateScore(req.body, function(err){
+		redirect(err,res,'/subject/'+req.body.subject_id,next);
+	});
+};
+
+exports.getUpdateGrade = function (req, res, next) {
+	req.body.id = req.params.id;
+	school_records.getUpdateGrade(req.body, function(err){
+		redirect(err,res,'/grade/'+req.body.id,next);
+	});
+};
+
+exports.getUpdateSubject = function (req, res, next) {
+	req.body.id = req.params.sub_id;
+	req.body.grade_id = req.params.grade_id;
+	school_records.getUpdateSubject(req.body, function(err){
+		redirect(err,res,'/subject/'+req.body.id,next);
+	});
+};
+
+exports.getUpdateStudent = function (req, res, next) {
+	req.body.id = req.params.std_id;
 	bodyParser(req.body);
-	school_records.getUpdateStudent(req.body,
-		function(err){
-			if(err)
-				next();
-			else{
-				res.redirect('/student/'+id);
-				res.end();
-			}
-		});
+	school_records.getUpdateStudent(req.body, function(err){
+		redirect(err,res,'/student/'+req.body.id,next);
+	});
 };
 
-exports.get_add_student = function (req, res, next) {
-	res.render('grade_add', {grade_id: req.params.id});
+exports.addStudent = function(req, res, next) {
+	req.body.grade_id = req.params.grade_id;
+	school_records.addStudent(req.body, function(err){
+		redirect(err,res,'/grade/'+req.body.grade_id,next);
+	});
 };
 
-exports.get_add_subject = function (req,res,next) {
-	res.render('subject_add', {grade_id: req.params.id});
-};
-
-exports.add_student = function(req, res, next) {
-	school_records.addStudent(req.body,
-		function(err){
-			if(err)
-				next();
-			else{
-				res.redirect('/grade/'+req.body.grade_id);
-				res.end();
-			}
-		});
-};
-
-exports.add_subject = function(req, res, next) {
-	school_records.addSubject(req.body,
-		function(err){
-			if(err)
-				next();
-			else{
-				res.redirect('/grade/'+req.body.grade_id);
-				res.end();
-			}
-		});
+exports.addSubject = function(req, res, next) {
+	req.body.grade_id = req.params.grade_id;
+	school_records.addSubject(req.body, function(err){
+		redirect(err,res,'/grade/'+req.body.grade_id,next);
+	});
 };
