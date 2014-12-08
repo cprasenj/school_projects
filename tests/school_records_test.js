@@ -283,7 +283,16 @@ describe('school_records',function(){
 					var subjectsInGradeTwo = grades[1].subjects.length;
 					subject.id = subjectsInGradeOne + subjectsInGradeTwo;
 					assert.deepEqual(subject, grades[0].subjects[subjectsInGradeOne - 1]);
-					done();
+					school_records.getSubjectSummary(subject.id, function(err, addSub){
+						var expectedDetails = [
+							{ id: 1, name: 'Abu', score: 0 },
+							{ id: 2, name: 'Babu', score: 0 },
+							{ id: 3, name: 'Kabu', score: 0 },
+							{ id: 4, name: 'Dabu', score: 0 }
+						];
+						assert.deepEqual(addSub.student,expectedDetails);
+						done();
+					});
 				});
 			});
 		});

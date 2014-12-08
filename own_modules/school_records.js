@@ -156,8 +156,26 @@ var _addStudent = function(student, db, onComplete) {
 var _addSubject = function(subject, db, onComplete) {
 	var insertSubject = "insert into subjects (name, maxScore, grade_id) values ('" +
 		subject.name + "', '" + subject.maxScore + "','"+subject.grade_id+"');";
-	db.run(insertSubject, onComplete);	
+	var studentIds = "select id from students where grade_id='"+subject.grade_id+"';";
+	var subjectIds = "select id from subjects where grade_id='"+subject.grade_id+"';"
+
+	db.run(insertSubject, function(err){
+		db.all(subjectIds, function(err, subjects){
+			var newSubId = subjects[subjects.length-1].id;
+			db.all(studentIds, function(err, students){
+				students.forEach(function(std,index,stds){
+					var insertScore = "insert into scores values ('"+std.id+"', '"+newSubId+"', '0');";
+					db.run(insertScore, function(err){
+						if(index == stds.length-1){
+							onComplete(null);
+						}
+					});
+				});
+			});
+		});
+	});
 };
+
 var _getEditScore = function(ids, db, onComplete){
 	var score_details = {};
 	var student_query = "select * from students where id = '"+ids.student+"';";
