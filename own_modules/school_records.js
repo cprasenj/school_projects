@@ -134,9 +134,64 @@ var _getEditSubject = function (id, db, onComplete) {
 
 var _addStudent = function(student, db, onComplete) {
 	var insertStudent = "insert into students (name, grade_id) values ('" + student.name + "', " + student.grade_id + ");";
-	db.run(insertStudent, onComplete);
+	var studentIds = "select id from students where grade_id='"+student.grade_id+"';";
+	var subjectIds = "select id from subjects where grade_id='"+student.grade_id+"';"
+	db.run(insertStudent, function(err){
+		db.all(studentIds, function(err, students){
+			var newStdId = students[students.length-1].id;
+			db.all(subjectIds, function(err, subjects){
+				subjects.forEach(function(sub,index,subs){
+					var insertScore = "insert into scores values ('"+newStdId+"', '"+sub.id+"', '0');";
+					db.run(insertScore, function(err){
+						if(index == subs.length-1){
+							onComplete(null);
+						}
+					});
+				});
+			});
+		});
+	});
 };
 
+var _addSubject = function(subject, db, onComplete) {
+	var insertSubject = "insert into subjects (name, maxScore, grade_id) values ('" +
+		subject.name + "', '" + subject.maxScore + "','"+subject.grade_id+"');";
+	db.run(insertSubject, onComplete);	
+};
+var _getEditScore = function(ids, db, onComplete){
+	var score_details = {};
+	var student_query = "select * from students where id = '"+ids.student+"';";
+	var subject_query =  "select id,name,maxScore from subjects where id = '"+ids.subject+"';";
+	db.get(student_query,function(stud_err,student){
+		score_details.student = {id: student.id, name: student.name};
+		var grade_query =  "select * from grades where id = '"+student.grade_id+"';";
+		db.get(grade_query,function(grd_err,grade){
+			score_details.grade = grade;
+			db.get(subject_query,function(sub_err,subject){
+				score_details.subject = subject;
+				_getScore(ids,db,function(scor_err,score){
+					score_details.score = score;
+					onComplete(null,score_details);
+				});				
+			});
+		});
+	});
+};
+
+var _updateScore = function(score, db, onComplete){
+	var updateScore = "update scores set score='"+score.score+
+		"' where subject_id='"+score.subject_id+"' and student_id='"+score.student_id+"';";
+	db.run(updateScore, function(err){
+		onComplete(null);
+	});
+};
+
+var _getScore = function(ids, db, onComplete){
+	var getScore = "select score from scores where subject_id='"+ids.subject+"' and student_id='"+ids.student+"';";
+	db.get(getScore, function(err, score){
+		onComplete(null, score.score);
+	});
+};
 
 var init = function(location){	
 	var operate = function(operation){
@@ -167,7 +222,11 @@ var init = function(location){
 		getUpdateStudent: operate(_getUpdateStudent),
 		getEditSubject: operate(_getEditSubject),
 		getUpdateSubject: operate(_getUpdateSubject),
-		addStudent: operate(_addStudent)
+		addStudent: operate(_addStudent),
+		addSubject: operate(_addSubject),
+		getEditScore: operate(_getEditScore),
+		updateScore: operate(_updateScore),
+		getScore: operate(_getScore)
 	};
 
 	return records;

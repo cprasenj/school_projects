@@ -1,0 +1,27 @@
+doctype html
+html
+ head
+  title Score Edit
+  link(rel='stylesheet', href='/stylesheets/style.css')  
+ body
+  div #{name} &nbsp;&nbsp;&nbsp;&nbsp; 
+  div maxscore: #{maxScore}
+  div grade: 
+   a(href="/grade/#{grade.id}") #{grade.name}
+  form(action = "/updateScore", method="POST")
+   table(border = "4")
+    tr
+     th Student Id
+     th Student Name
+     th Subject Id
+     th Subject Score
+    tr
+     td
+      input(type="text", name="student_id", value="#{student.id}")
+     td
+      input(type="text", name="student_name", value="#{student.name}")
+     td
+      input(type="text", name="subject_id", value="#{subject.id}")
+     td
+      input(type="text", name="score", value="#{score}")
+   input(type="submit", value="save changes")

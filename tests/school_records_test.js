@@ -225,6 +225,34 @@ describe('school_records',function(){
 		});
 	});
 
+	describe('#getEditScore',function(){
+		it('retrieves the summary of subject 1',function(done){
+			var ids = {student : 1, subject: 1};
+			school_records.getEditScore(ids, function(err, scoreFound){
+				var expectedScore  = {
+					subject: {id: 1, name: "English-1", maxScore: 100},
+					student: {id:1, name:'Abu'},
+					grade : {id: 1, name: '1st std'},
+					score: 75
+				};
+				assert.deepEqual(expectedScore, scoreFound);
+				done();
+			});
+		});
+	});
+
+	describe('#updateScore',function(){
+		it('updates the score of the student 1 of subject id 2',function(done){
+			var change = {subject_id: 2, student_id: 1, score: 10};
+			school_records.updateScore(change, function(err){
+				school_records.getScore({subject: 2, student: 1}, function(err, score){
+					assert.deepEqual(change.score, score);
+					done();
+				});
+			});
+		});
+	});
+
 	describe('#addStudent',function(){
 		it('add a new student into grade 1',function(done){
 			var student = {grade_id: 1, name: 'Gautam'};
@@ -235,6 +263,26 @@ describe('school_records',function(){
 					var studentsInGradeTwo = grades[1].students.length;
 					student.id = studentsInGradeOne + studentsInGradeTwo;
 					assert.deepEqual(student, grades[0].students[studentsInGradeOne - 1]);
+					school_records.getStudentSummary(student.id, function(err, addedStdt){
+						assert.deepEqual(addedStdt.subjects,[{id:1,name:'English-1',score:0,maxScore:100},
+						{id:2,name:'Maths-1',score:0,maxScore:100},
+						{id:3,name:'Moral Science',score:0,maxScore:50}]);
+						done();
+					});
+				});
+			});
+		});
+	});
+	describe('#addSubject',function(){
+		it('add a new subject into grade 1',function(done){
+			var subject = {grade_id: 1, name: 'Automata', maxScore: 500};
+			school_records.addSubject(subject, function(err){
+				assert.notOk(err);	
+				school_records.getSubjectsByGrade(function(err, grades) {
+					var subjectsInGradeOne = grades[0].subjects.length;
+					var subjectsInGradeTwo = grades[1].subjects.length;
+					subject.id = subjectsInGradeOne + subjectsInGradeTwo;
+					assert.deepEqual(subject, grades[0].subjects[subjectsInGradeOne - 1]);
 					done();
 				});
 			});

@@ -26,14 +26,22 @@ app.get('/student/:id',school_routes.get_student);
 app.get('/grade/:id',school_routes.get_grade_summary);
 app.get('/subject/:id',school_routes.get_subject_summary);
 app.get('/grade_edit/:id',school_routes.get_edit_grade);
+
+
 app.post('/updateGrade',school_routes.get_update_grade);
 app.get('/student_edit/:id',school_routes.get_edit_student);
 app.post('/updateStudent',school_routes.get_update_student);
 app.get('/subject_edit/:id',school_routes.get_edit_subject);
 app.post('/updateSubject',school_routes.get_update_subject);
+app.get('/score_edit/:student_id/:subject_id',school_routes.get_edit_score);
+app.post('/updateScore',school_routes.update_score);
+
+
 
 app.get('/grade_add/:id', school_routes.get_add_student);
 app.post('/addStudent', school_routes.add_student);
+app.get('/subject_add/:id', school_routes.get_add_subject);
+app.post('/addSubject', school_routes.add_subject);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

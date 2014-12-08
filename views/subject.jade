@@ -6,16 +6,19 @@ html
  body
   h1 Subject Summary 
   div #{name} &nbsp;&nbsp;&nbsp;&nbsp; 
-   a(href = "/subject_edit/#{id}" ) EDIT
+   a(href = "/subject_edit/#{id}" ) Edit #{name}
   div maxscore: #{maxScore}
   div grade: 
    a(href="/grade/#{grade_id}") #{grade[0].name}
   table(border = "4")
    tr
-    th name
-    th score
+    th Name
+    th Score
+    th Edit
    each st in student
     tr
      td
       a(href="/student/#{st.id}") #{st.name}
      td #{st.score}
+     td
+      a(href="/score_edit/#{st.id}/#{id}") edit
