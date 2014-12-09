@@ -245,7 +245,7 @@ describe('school_records',function(){
 
 	describe('#score_update',function(){
 		it('updates the score of the student 1 of subject id 2',function(done){
-			var change = {subject_id: 2, student_id: 1, score: 10};
+			var change = {id: 2, student_id: 1, score: 10};
 			school_records.score_update(change, function(err){
 				school_records.get_score({subject: 2, student: 1}, function(err, score){
 					assert.deepEqual(change.score, score);
@@ -257,15 +257,16 @@ describe('school_records',function(){
 
 	describe('#student_add',function(){
 		it('add a new student into grade 1',function(done){
-			var student = {grade_id: 1, name: 'Gautam'};
-			school_records.student_add(student, function(err){
+			var gradeEntry = {id: 1, name: 'Gautam'};//grade_id,newstudent
+			school_records.student_add(gradeEntry, function(err){
 				assert.notOk(err);	
 				school_records.get_students(function(err, grades) {
 					var studentsInGradeOne = grades[0].students.length;
 					var studentsInGradeTwo = grades[1].students.length;
-					student.id = studentsInGradeOne + studentsInGradeTwo;
+					newStdId = studentsInGradeOne + studentsInGradeTwo;
+					var student = {grade_id: gradeEntry.id, name: gradeEntry.name, id: newStdId};
 					assert.deepEqual(student, grades[0].students[studentsInGradeOne - 1]);
-					school_records.get_student(student.id, function(err, addedStdt){
+					school_records.get_student(newStdId, function(err, addedStdt){
 						assert.deepEqual(addedStdt.subjects,[{id:1,name:'English-1',score:0,maxScore:100},
 						{id:2,name:'Maths-1',score:0,maxScore:100},
 						{id:3,name:'Moral Science',score:0,maxScore:50}]);
@@ -277,13 +278,14 @@ describe('school_records',function(){
 	});
 	describe('#subject_add',function(){
 		it('add a new subject into grade 1',function(done){
-			var subject = {grade_id: 1, name: 'Automata', maxScore: 500};
-			school_records.subject_add(subject, function(err){
+			var gradeEntry = {id: 1, name: 'Automata', maxScore: 500};
+			school_records.subject_add(gradeEntry, function(err){
 				assert.notOk(err);	
 				school_records.get_subjects(function(err, grades) {
 					var subjectsInGradeOne = grades[0].subjects.length;
 					var subjectsInGradeTwo = grades[1].subjects.length;
-					subject.id = subjectsInGradeOne + subjectsInGradeTwo;
+					newSubId = subjectsInGradeOne + subjectsInGradeTwo;
+					var subject = {grade_id: gradeEntry.id, name: gradeEntry.name, id: newSubId, maxScore: 500};
 					assert.deepEqual(subject, grades[0].subjects[subjectsInGradeOne - 1]);
 					school_records.get_subject(subject.id, function(err, addSub){
 						var expectedDetails = [

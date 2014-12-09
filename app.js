@@ -22,23 +22,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/grades',school_routes.get_grades);
 app.get('/students',school_routes.get_students);
 app.get('/subjects',school_routes.get_subjects);
-app.get('/student/:id',school_routes.get_student);
-app.get('/grade/:id',school_routes.get_grade);
-app.get('/subject/:id',school_routes.get_subject);
+app.get('/student/:id',school_routes.get('student'));
+app.get('/grade/:id',school_routes.get('grade'));
+app.get('/subject/:id',school_routes.get('subject'));
 
-app.get('/grade_edit/:id',school_routes.get_grade_edit);
-app.get('/student_edit/:id',school_routes.get_student_edit);
-app.get('/subject_edit/:id',school_routes.get_subject_edit);
+app.get('/grade_edit/:id',school_routes.get('grade_edit'));
+app.get('/student_edit/:id',school_routes.get('student_edit'));
+app.get('/subject_edit/:id',school_routes.get('subject_edit'));
 app.get('/score_edit/:student/:subject',school_routes.get_score_edit);
 app.get('/student_add/:grade_id', school_routes.get_student_add);
 app.get('/subject_add/:grade_id', school_routes.get_subject_add);
 
-app.post('/updateGrade/:id',school_routes.grade_update);
+app.post('/updateGrade/:id',school_routes.post('grade_update','/grade/'));
 app.post('/updateStudent/:id',school_routes.student_update);
-app.post('/updateSubject/:id/:grade_id',school_routes.subject_update);
-app.post('/updateScore/:student_id/:subject_id',school_routes.score_update);
-app.post('/addStudent/:grade_id', school_routes.student_add);
-app.post('/addSubject/:grade_id', school_routes.subject_add);
+app.post('/updateSubject/:id/:grade_id',school_routes.post('subject_update','/subject/'));
+app.post('/updateScore/:student_id/:id',school_routes.post('score_update','/subject/'));
+app.post('/addStudent/:id', school_routes.post('student_add','/grade/'));
+app.post('/addSubject/:id', school_routes.post('subject_add','/grade/'));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

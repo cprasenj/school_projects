@@ -9,7 +9,7 @@ html
   p
    each grade in grades
     div
-     a(href="/grades/#{grade.id}") #{grade.name}
+     a(href="/grade/#{grade.id}") #{grade.name}
      ul
       each subject in grade.subjects
        li

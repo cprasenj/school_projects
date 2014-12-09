@@ -1,5 +1,12 @@
 var sqlite3 = require('sqlite3').verbose();
 
+
+var bodyParser = function (body) {
+	body.subjects = body.subject_id.map(function(id,i){
+		return {'id':id, score:body.subject_score[i] };
+	});
+};
+
 var _getGrades = function(db,onComplete){
 	var q = 'select * from grades';
 	db.all(q,onComplete);
@@ -133,7 +140,8 @@ var _getEditSubject = function (id, db, onComplete) {
 	_getSubjectSummary(id, db, onComplete);
 };
 
-var _addStudent = function(student, db, onComplete) {
+var _addStudent = function(newStd, db, onComplete) {
+	var student = {name: newStd.name, grade_id: newStd.id};
 	var insertStudent = "insert into students (name, grade_id) values ('" + student.name + "', " + student.grade_id + ");";
 	var studentIds = "select id from students where grade_id='"+student.grade_id+"';";
 	var subjectIds = "select id from subjects where grade_id='"+student.grade_id+"';"
@@ -154,7 +162,8 @@ var _addStudent = function(student, db, onComplete) {
 	});
 };
 
-var _addSubject = function(subject, db, onComplete) {
+var _addSubject = function(newSub, db, onComplete) {
+	var subject = {name: newSub.name, grade_id: newSub.id, maxScore: newSub.maxScore};
 	var insertSubject = "insert into subjects (name, maxScore, grade_id) values ('" +
 		subject.name + "', '" + subject.maxScore + "','"+subject.grade_id+"');";
 	var studentIds = "select id from students where grade_id='"+subject.grade_id+"';";
@@ -197,10 +206,10 @@ var _getEditScore = function(ids, db, onComplete){
 	});
 };
 
-var _updateScore = function(score, db, onComplete){
-	var updateScore = "update scores set score='"+score.score+
-		"' where subject_id='"+score.subject_id+"' and student_id='"+score.student_id+"';";
-	db.run(updateScore, function(err){
+var _updateScore = function(change, db, onComplete){
+	var updateChange = "update scores set score='"+change.score+
+		"' where subject_id='"+change.id+"' and student_id='"+change.student_id+"';";
+	db.run(updateChange, function(err){
 		onComplete(null);
 	});
 };
