@@ -36,7 +36,8 @@ var _getSubjectsByGrade = function(db,onComplete){
 	});	
 };
 
-var _getStudentSummary = function(id, db,onComplete){
+var _getStudentSummary = function(params, db,onComplete){
+	var id = params.id;
 	var student_grade_query = 'select s.name as name, s.id as id, g.name as grade_name, g.id as grade_id '+
 		'from students s, grades g where s.grade_id = g.id and s.id='+id;
 	var subject_score_query = 'select su.name, su.id, su.maxScore, sc.score '+
@@ -54,7 +55,8 @@ var _getStudentSummary = function(id, db,onComplete){
 	});
 };
 
-var _getGradeSummary = function(id,db,onComplete){
+var _getGradeSummary = function(params,db,onComplete){
+	var id = params.id;
 	var student_query = "select id,name from students where grade_id="+id;
 	var subject_query = "select id,name from subjects where grade_id="+id;
 	var grade_query = "select id,name from grades where id="+id;
@@ -77,7 +79,8 @@ var _getUpdateGrade = function(grade, db, onComplete){
 	})
 };
 
-var _getEditGrade = function (id, db, onComplete) {
+var _getEditGrade = function (params, db, onComplete) {
+	var id = params.id;
 	var grade_query = "select name from grades where id="+id;
 	db.get(grade_query, function (err, grade) {
 		if(err) return err;
@@ -87,11 +90,25 @@ var _getEditGrade = function (id, db, onComplete) {
 };
 
 
-var _getEditStudent = function (id, db, onComplete) {
-	_getStudentSummary(id, db, onComplete);
+var _getEditStudent = function (params, db, onComplete) {
+	_getStudentSummary(params, db, onComplete);
 };
 
-var _getUpdateStudent = function(student, db, onComplete){
+var parser = function (body) {
+	var subjects = body.subject_id.map(function(id,i){
+		return {'id':id, score:body.subject_score[i] };
+	});
+	return {
+		name: body.name,
+		id: body.id,
+		grade_id: body.grade_id,
+		subjects: subjects
+	};
+};
+
+
+var _getUpdateStudent = function(body, db, onComplete){
+	var student = parser(body);
 	var studentUpdateQuery = "update students set name = '"+student.name+"', grade_id = '" +student.grade_id + "' where id='" +student.id+"'";
 	db.run(studentUpdateQuery,function(std_err){
 		student.subjects.forEach(function(subject,index,array){
@@ -112,7 +129,8 @@ var _getUpdateSubject = function(subject, db, onComplete){
 	});
 };
 
-var _getSubjectSummary = function(id,db,onComplete){
+var _getSubjectSummary = function(params,db,onComplete){
+	var id = params.id;
 	var subject_query = "select name, grade_id, maxScore from subjects where id ="+id;
 	db.get(subject_query,function(err,subject){
 		subject.id = id;
@@ -260,6 +278,7 @@ var init = function(location){
 	return records;
 };
 
+exports.parser = parser;
 exports.init = init;
 ////////////////////////////////////
 exports.getSubjects = function(grade,callback){

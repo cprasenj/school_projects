@@ -23,13 +23,6 @@ var bodyParser = function (body) {
 	});
 };
 
-exports.get = function(page){
-	return function(req,res,next){
-		school_records['get_'+page](req.params.id, function(err, content){
-			render(err,res,page,content,next);
-		});
-	};
-};
 
 exports.post = function(method, goBack){
 	return function(req,res,next){
@@ -40,10 +33,20 @@ exports.post = function(method, goBack){
 	};
 };
 
-exports.get_grades = function(req,res){
-	school_records.get_grades(function(err,grades){
-		res.render('grades',{grades:grades});
-	});
+exports.get = function(page){
+	return function(req,res,next){
+		school_records['get_'+page](req.params, function(err, content){
+			render(err,res,page,content,next);
+		});
+	};
+};
+
+exports.put = function(page){
+	return function(req,res){
+		school_records['get_'+page](function(err,content){
+			res.render(page,{grades:content});
+		});
+	};
 };
 
 exports.get_student_add = function (req, res) {
@@ -52,30 +55,4 @@ exports.get_student_add = function (req, res) {
 
 exports.get_subject_add = function (req,res) {
 	res.render('subject_add', {grade_id: req.params.grade_id});
-};
-
-exports.get_students = function(req,res){
-	school_records.get_students(function(err,grades){
-		res.render('students',{grades:grades});
-	});
-};
-
-exports.get_subjects = function(req,res){
-	school_records.get_subjects(function(err,grades){
-		res.render('subjects',{grades:grades});
-	});
-};
-
-exports.get_score_edit = function(req,res,next){
-	school_records.get_score_edit(req.params, function(err,score){
-		render(err,res,'score_edit',score,next);
-	});
-};
-
-exports.student_update = function (req, res, next) {
-	injectParams(req.body,req.params);
-	bodyParser(req.body);
-	school_records.student_update(req.body, function(err){
-		redirect(err,res,'/student/'+req.body.id,next);
-	});
 };
