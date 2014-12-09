@@ -229,23 +229,23 @@ var init = function(location){
 	};
 
 	var records = {		
-		getGrades: operate(_getGrades),
-		getStudentsByGrade: operate(_getStudentsByGrade),
-		getSubjectsByGrade: operate(_getSubjectsByGrade),
-		getStudentSummary: operate(_getStudentSummary),
-		getGradeSummary: operate(_getGradeSummary),
-		getSubjectSummary: operate(_getSubjectSummary),
-		getEditGrade: operate(_getEditGrade),
-		getUpdateGrade: operate(_getUpdateGrade),
-		getEditStudent: operate(_getEditStudent),
-		getUpdateStudent: operate(_getUpdateStudent),
-		getEditSubject: operate(_getEditSubject),
-		getUpdateSubject: operate(_getUpdateSubject),
-		addStudent: operate(_addStudent),
-		addSubject: operate(_addSubject),
-		getEditScore: operate(_getEditScore),
-		updateScore: operate(_updateScore),
-		getScore: operate(_getScore)
+		get_grades: operate(_getGrades),
+		get_students: operate(_getStudentsByGrade),
+		get_subjects: operate(_getSubjectsByGrade),
+		get_student: operate(_getStudentSummary),
+		get_grade: operate(_getGradeSummary),
+		get_subject: operate(_getSubjectSummary),
+		get_grade_edit: operate(_getEditGrade),
+		grade_update: operate(_getUpdateGrade),
+		get_student_edit: operate(_getEditStudent),
+		student_update: operate(_getUpdateStudent),
+		get_subject_edit: operate(_getEditSubject),
+		subject_update: operate(_getUpdateSubject),
+		student_add: operate(_addStudent),
+		subject_add: operate(_addSubject),
+		get_score_edit: operate(_getEditScore),
+		score_update: operate(_updateScore),
+		get_score: operate(_getScore)
 	};
 
 	return records;

@@ -19,26 +19,26 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/grades',school_routes.getGrades);
-app.get('/students',school_routes.getStudents);
-app.get('/subjects',school_routes.getSubjects);
-app.get('/student/:id',school_routes.getStudentSummary);
-app.get('/grade/:id',school_routes.getGradeSummary);
-app.get('/subject/:id',school_routes.getSubjectSummary);
+app.get('/grades',school_routes.get_grades);
+app.get('/students',school_routes.get_students);
+app.get('/subjects',school_routes.get_subjects);
+app.get('/student/:id',school_routes.get_student);
+app.get('/grade/:id',school_routes.get_grade);
+app.get('/subject/:id',school_routes.get_subject);
 
-app.get('/grade_edit/:id',school_routes.getEditGrade);
-app.post('/updateGrade/:id',school_routes.getUpdateGrade);
-app.get('/student_edit/:id',school_routes.getEditStudent);
-app.post('/updateStudent/:std_id',school_routes.getUpdateStudent);
-app.get('/subject_edit/:id',school_routes.getEditSubject);
-app.post('/updateSubject/:sub_id/:grade_id',school_routes.getUpdateSubject);
-app.get('/score_edit/:student_id/:subject_id',school_routes.getEditScore);
-app.post('/updateScore/:student_id/:subject_id',school_routes.updateScore);
+app.get('/grade_edit/:id',school_routes.get_grade_edit);
+app.get('/student_edit/:id',school_routes.get_student_edit);
+app.get('/subject_edit/:id',school_routes.get_subject_edit);
+app.get('/score_edit/:student/:subject',school_routes.get_score_edit);
+app.get('/student_add/:grade_id', school_routes.get_student_add);
+app.get('/subject_add/:grade_id', school_routes.get_subject_add);
 
-app.get('/grade_add/:grade_id', school_routes.getAddStudent);
-app.post('/addStudent/:grade_id', school_routes.addStudent);
-app.get('/subject_add/:grade_id', school_routes.getAddSubject);
-app.post('/addSubject/:grade_id', school_routes.addSubject);
+app.post('/updateGrade/:id',school_routes.grade_update);
+app.post('/updateStudent/:id',school_routes.student_update);
+app.post('/updateSubject/:id/:grade_id',school_routes.subject_update);
+app.post('/updateScore/:student_id/:subject_id',school_routes.score_update);
+app.post('/addStudent/:grade_id', school_routes.student_add);
+app.post('/addSubject/:grade_id', school_routes.subject_add);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

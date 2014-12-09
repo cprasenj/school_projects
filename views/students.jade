@@ -11,6 +11,7 @@ html
     div
      a(href="/grade/#{grade.id}") #{grade.name}
      ul
+      - console.log(grades, grade);
       each student in grade.students
        li
         a(href="/student/#{student.id}") #{student.name}
