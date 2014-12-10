@@ -112,16 +112,23 @@ var parser = function (body) {
 	};
 };
 
+var query_each = function(objects,onEach,atLast){
+	var length = objects.length;
+	objects.forEach(function(subject,index){
+		var complete = (index == length-1)? function(){atLast(null)}: function(){}; 
+		onEach(subject,complete);
+	});
+};
+
 var _getUpdateStudent = function(body, db, onComplete){
 	var student = parser(body);
 	var studentUpdateQuery = updateTable('students',["name='"+student.name+"'","grade_id='"+student.grade_id+"'"],['id='+student.id]);
 	db.run(studentUpdateQuery,function(std_err){
-		student.subjects.forEach(function(subject,index,array){
-			var updateScoreQuery = updateTable('scores',["score='"+subject.score+"'"],["student_id='"+student.id+"'",'subject_id='+subject.id]);
-			db.run(updateScoreQuery, function(){
-				if(array.length-1 == index) onComplete(null);
-			});
-		});
+	var onEach = function(subject,atLast){
+		var updateScoreQuery = updateTable('scores',["score='"+subject.score+"'"],["student_id='"+student.id+"'",'subject_id='+subject.id]);
+		db.run(updateScoreQuery,atLast);
+	};
+	query_each(student.subjects,onEach,onComplete);
 	});
 };
 
@@ -143,20 +150,21 @@ var _getSubjectSummary = function(params,db,onComplete){
 		var student_query = selectFrom('students',['id','name'],['grade_id='+subject.grade_id]);
 		db.all(student_query,function(est,student){
 			subject.student = student;
-			var execute = function() {
+			var atLast = function() {
 				var grade_query = selectFrom('grades',['name'],['id='+subject.grade_id]);
 				db.all(grade_query,function(egr,grade){
 					subject.grade = grade;
 					onComplete(null,subject);
 				});
 			};
-			student.forEach(function(st,index,array){
+			var onEach = function(st, atLast){
 				var selectScore = selectFrom('scores',['score'],['student_id='+st.id,'subject_id='+id]);
 				db.get(selectScore,function(esc,score){
 					score && (st.score=score.score); 
-					if(array.length-1 == index) execute();
+					atLast();
 				});
-			});
+			};
+			query_each(student,onEach,atLast);
 		});
 	});
 };
@@ -169,14 +177,11 @@ var insert_score = function(db,insertQuery,qry1,qry2,onComplete){
 		db.all(qry1.query, function(err, content1){
 			var newId = content1[content1.length-1].id;
 			db.all(qry2.query, function(err, content2){
-				content2.forEach(function(cont,index,contents){
-					var insertScore = "insert into scores ('"+qry1.col+"','"+qry2.col+"','score') values ('"+newId+"', '"+cont.id+"', '0');";
-					db.run(insertScore, function(err){
-						if(index == contents.length-1){
-							onComplete(null);
-						}
-					});
-				});
+				var onEach = function(content,atLast){
+					var insertScore = "insert into scores ('"+qry1.col+"','"+qry2.col+"','score') values ('"+newId+"', '"+content.id+"', '0');";
+					db.run(insertScore, atLast);
+				};
+				query_each(content2,onEach,onComplete);
 			});
 		});
 	});	
